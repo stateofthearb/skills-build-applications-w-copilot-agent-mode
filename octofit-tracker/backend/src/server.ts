@@ -10,10 +10,14 @@ import {
 
 const app = express();
 const port = 8000;
-const codespaceName = process.env.CODESPACE_NAME;
-const baseUrl = codespaceName
-  ? `https://${codespaceName}-8000.app.github.dev`
-  : `http://localhost:${port}`;
+
+export function getApiBaseUrl(codespaceName = process.env.CODESPACE_NAME): string {
+  return codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev`
+    : `http://localhost:${port}`;
+}
+
+const baseUrl = getApiBaseUrl();
 
 app.use(express.json());
 
