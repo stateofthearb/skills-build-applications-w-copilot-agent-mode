@@ -1,0 +1,25 @@
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+const apiBaseUrl = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev/api`
+  : 'http://localhost:8000/api';
+
+export function getApiBaseUrl() {
+  return apiBaseUrl;
+}
+
+export function getRecords(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.data)) return payload.data;
+  if (Array.isArray(payload?.results)) return payload.results;
+  if (Array.isArray(payload?.items)) return payload.items;
+  return [];
+}
+
+export async function fetchCollection(collectionOrUrl) {
+  const endpoint = collectionOrUrl.startsWith('http')
+    ? collectionOrUrl
+    : `${apiBaseUrl}/${collectionOrUrl}/`;
+  const response = await fetch(endpoint);
+  if (!response.ok) throw new Error(`Could not load ${collection}.`);
+  return getRecords(await response.json());
+}
