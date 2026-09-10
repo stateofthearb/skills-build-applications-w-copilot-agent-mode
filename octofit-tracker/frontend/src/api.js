@@ -15,8 +15,11 @@ export function getRecords(payload) {
   return [];
 }
 
-export async function fetchCollection(collection) {
-  const response = await fetch(`${apiBaseUrl}/${collection}/`);
+export async function fetchCollection(collectionOrUrl) {
+  const endpoint = collectionOrUrl.startsWith('http')
+    ? collectionOrUrl
+    : `${apiBaseUrl}/${collectionOrUrl}/`;
+  const response = await fetch(endpoint);
   if (!response.ok) throw new Error(`Could not load ${collection}.`);
   return getRecords(await response.json());
 }
